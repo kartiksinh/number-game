@@ -1,0 +1,120 @@
+<!doctype html>
+<html>
+<head>
+<title>Inkoop Assessment Code</title>
+</head>
+<body>
+    <div id="rules">
+        <h1>Number Game</h1>
+        <p>Build a game in js with following rules</p>
+        <ul>
+            <li>User has 1000 INR when he starts the game</li>
+            <li>Every try(click on start) is charged 100 INR</li>
+            <li>Game is over if user has less than 100 INR</li>
+            <li>Every try generates three random numbers, each random number is in 0-9 range</li>
+            <li>If all the numbers are odd/even (eg. 2 4 6), user gets 300 INR</li>
+            <li>If the numbers are in sequence with difference of 1 in any order (eg. 2 3 4 or 3 2 4 or 4 6 5), user gets 800 INR</li>
+            <li>If all the numbers are same (eg. 4 4 4), user gets 1000 INR</li>
+            <li>Else user gets no money</li>
+        </ul>
+        <h3>Game</h3>
+        <div> You have 1000 INR</div>
+    </div>
+    <div id="show">
+        <p>The Random Numbers are:</p>
+        <h1 id="showRandomNumbers"></h1>
+        <p id="message"></p>
+        <div>You have <span id="moneyLeft"></span> INR</div>
+    </div>     
+    <button id="startButton" onclick="start()">Start</button>
+    <script type="text/javascript">
+        var showRandomNumbers = document.getElementById('showRandomNumbers');
+        var moneyLeft = document.getElementById('moneyLeft');
+        var displayMessage = document.getElementById('message');
+        var button = document.getElementById('startButton')
+        var Game = document.getElementById('show');
+
+        Game.style.display = "none";
+
+        var money = 1000;   
+
+        function start(){
+            var odd = 0;
+            var even = 0;
+            let result = "";
+            var message= "";
+            money -= 100;
+
+            var rules = document.getElementById('rules');
+            rules.style.display = "none";
+            Game.style.display = "block";
+
+
+            var random1 = Math.floor(Math.random()*10) ;
+            var random2 = Math.floor(Math.random()*10) ;
+            var random3 = Math.floor(Math.random()*10) ;
+            
+            showRandomNumbers.innerHTML = random1 + " " + random2 + " " + random3;
+
+            var array = [random1,random2,random3];
+            const sortArray = array.sort(function(a,b){return b - a});
+
+            if(random1 === random2 && random2 === random3){
+                result = "Ace";
+            }else {
+                for(var i=0; i< array.length; i++){
+                    if(array[i] % 2 === 0){
+                        even += 1;
+                    }else
+                        {
+                        odd += 1;
+                    }
+                }
+                    if(even === 3 || odd === 3){
+                        result = "EvenOdd";
+                    }
+                    if(money < 100){
+                        result = "GameOver"
+                    }
+            }               
+
+            for(i=0; i<sortArray.length; i++){
+                if( (sortArray[i]-sortArray[i+1]===1) && (sortArray[i+1]-sortArray[i+2]===1) ){
+                    result = "Consecutive";
+                }
+            }
+
+            switch(result){
+                case "Ace":
+                    message = "You were lucky this time, you got 1000 INR as all the numbers are same.";
+                    money += 1000;
+                    break;
+                case "Consecutive":
+                    message = "You were lucky this time, you got 800 INR as all the numbers  have difference 1.";
+                    money += 800;
+                    break;
+                case "EvenOdd":
+                    message = "You were lucky this time, you got 300 INR as all the numbers are ODD/EVEN.";
+                    money += 300;
+                    break;
+                case "GameOver":
+                    message = "GAME OVER. Better luck next time.";
+                    Game.innerHTML = "SORRY! Game Over.";
+                    button.style.display = 'none';
+
+                    break;
+                default:
+                    message = "You were not lucky this time.";
+
+
+            };
+
+
+            moneyLeft.innerHTML = money;
+            displayMessage.innerHTML = message;
+        }
+    </script>
+  </body>
+</html>
+
+
